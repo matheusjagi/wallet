@@ -1,0 +1,49 @@
+server:
+  port: 8081
+  servlet:
+    context-path: '/picpay-wallet'
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: picpay-wallet-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db-wallet
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+  output:
+    ansi:
+      enabled: always
+  jackson:
+    mapper:
+      DEFAULT_VIEW_INCLUSION: true
+
+logging:
+  level:
+    com.picpay: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+picpay:
+  api:
+    url:
+      movement: 'http://picpay-movement-service'
+      timeline: 'http://picpay-timeline-service'
+
+eureka:
+  client:
+    service-url:
+      default-zone: 'http://localhost:8761/eureka'
+    instance:
+      hostname: localhost

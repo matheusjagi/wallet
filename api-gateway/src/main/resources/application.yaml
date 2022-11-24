@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: picpay-api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: wallet-service
+          uri: lb://PICPAY-WALLET-SERVICE
+          predicates:
+            - Path=/picpay-wallet/**
+        - id: movement-service
+          uri: lb://PICPAY-MOVEMENT-SERVICE
+          predicates:
+            - Path=/picpay-movement/**
+        - id: timeline-service
+          uri: lb://PICPAY-TIMELINE-SERVICE
+          predicates:
+            - Path=/picpay-timeline/**
+
+eureka:
+  client:
+    service-url:
+      default-zone: 'http://localhost:8761/eureka'
+    instance:
+      hostname: localhost
