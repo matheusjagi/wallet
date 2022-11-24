@@ -31,10 +31,6 @@ import java.util.UUID;
 @Table(name = "tb_users")
 public class UserModel implements Serializable {
 
-    public UserModel(UUID id) {
-        this.id = id;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

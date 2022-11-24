@@ -16,9 +16,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,9 +52,8 @@ public class AccountController {
 
     @PostMapping
     @JsonView(AccountDto.AccountView.List.class)
-    public ResponseEntity<AccountDto> register(@RequestBody
-                                            @Validated(AccountDto.AccountView.Registration.class)
-                                            @JsonView(AccountDto.AccountView.Registration.class) AccountDto accountDto) {
+    public ResponseEntity<AccountDto> register(@RequestBody @Validated(AccountDto.AccountView.Registration.class)
+                                                   @JsonView(AccountDto.AccountView.Registration.class) AccountDto accountDto) {
         log.debug("POST request to save a account: {}", accountDto);
 
         accountDto = accountService.create(accountDto);
@@ -70,19 +69,19 @@ public class AccountController {
                 .body(accountDto);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @JsonView(AccountDto.AccountView.List.class)
-    public ResponseEntity<AccountDto> update(@PathVariable("id") UUID userId,
-                                          @RequestBody @Validated(UserDto.UserView.Update.class)
-                                          @JsonView(UserDto.UserView.Update.class) AccountDto accountDto) {
-        log.debug("PUT request to updated a account: {}", accountDto);
-        return ResponseEntity.ok(accountService.update(userId, accountDto));
+    public ResponseEntity<AccountDto> updateTypeAccount(@PathVariable("id") UUID accountId,
+                                                        @RequestBody @Validated(UserDto.UserView.Update.class)
+                                                        @JsonView(UserDto.UserView.Update.class) AccountDto accountDto) {
+        log.debug("PUT request to updated type account: {}", accountDto);
+        return ResponseEntity.ok(accountService.updateTypeAccount(accountId, accountDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable(value = "id") UUID userId) {
-        log.debug("DELETE request to delete a account with ID: {}", userId);
-        accountService.deleteById(userId);
+    public ResponseEntity<Object> delete(@PathVariable(value = "id") UUID accountId) {
+        log.debug("DELETE request to delete a account with ID: {}", accountId);
+        accountService.deleteById(accountId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Account deleted successfully.");
     }
 }

@@ -13,7 +13,7 @@ public interface AccountService {
 
     AccountDto create(AccountDto accountDto);
 
-    AccountDto update(UUID userId, AccountDto accountDto);
+    AccountDto updateTypeAccount(UUID accountId, AccountDto accountDto);
 
     void deleteById(UUID accountId);
 }

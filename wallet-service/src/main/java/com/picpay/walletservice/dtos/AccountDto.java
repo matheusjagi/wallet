@@ -22,6 +22,7 @@ public class AccountDto implements Serializable {
     public interface AccountView {
         public static interface Registration {}
         public static interface BankDeposit {}
+        public static interface Update {}
         public static interface List {}
     }
 
@@ -37,12 +38,11 @@ public class AccountDto implements Serializable {
     @JsonView(AccountView.List.class)
     private String bankNumber;
 
-//    @NotBlank(groups = AccountDto.AccountView.BankDeposit.class)
     @JsonView(AccountView.List.class)
     private Double balance;
 
     @NotBlank(groups = AccountView.Registration.class)
-    @JsonView({AccountView.Registration.class, AccountView.List.class})
+    @JsonView({AccountView.Registration.class, AccountView.List.class, AccountView.Update.class})
     private String type;
 
     @JsonView(AccountView.List.class)

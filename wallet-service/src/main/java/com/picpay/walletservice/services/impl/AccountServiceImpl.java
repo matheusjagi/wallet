@@ -1,7 +1,6 @@
 package com.picpay.walletservice.services.impl;
 
 import com.picpay.walletservice.dtos.AccountDto;
-import com.picpay.walletservice.dtos.UserDto;
 import com.picpay.walletservice.enums.AccountStatus;
 import com.picpay.walletservice.enums.AccountType;
 import com.picpay.walletservice.models.AccountModel;
@@ -54,8 +53,13 @@ public class AccountServiceImpl implements AccountService {
         return mapper.map(account, AccountDto.class);
     }
 
+    private AccountModel getOne(UUID accountId) {
+        return mapper.map(findById(accountId), AccountModel.class);
+    }
+
     @Override
     public AccountDto create(AccountDto accountDto) {
+        UserModel user = mapper.map(userService.findById(accountDto.getUserId()), UserModel.class);
         AccountModel account = mapper.map(accountDto, AccountModel.class);
 
         account.setNumber(UtilsService.createRandomNumber(10L));
@@ -66,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
         account.setType(AccountType.valueOf(accountDto.getType()));
         account.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         account.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-        account.setUser(new UserModel(accountDto.getUserId()));
+        account.setUser(user);
 
         accountRepository.save(account);
 
@@ -75,26 +79,26 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto update(UUID accountId, AccountDto accountDto) {
-//        UserModel user = mapper.map(findById(userId), UserModel.class);
-//
-//        user.setFullName(userDto.getFullName());
-//        user.setPhoneNumber(userDto.getPhoneNumber());
-//        user.setEmail(userDto.getEmail());
-//        user.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
-//
-//        user = accountRepository.save(user);
-//
-//        log.info("User updated successfully - User ID: {}", user.getId());
-//        return mapper.map(user, UserDto.class);
-        return null;
+    public AccountDto updateTypeAccount(UUID accountId, AccountDto accountDto) {
+        AccountModel account = getOne(accountId);
+
+        account.setType(AccountType.valueOf(accountDto.getType()));
+        account.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+
+        account = accountRepository.save(account);
+
+        log.info("User updated successfully - User ID: {}", account.getId());
+        return mapper.map(account, AccountDto.class);
     }
 
     @Override
     public void deleteById(UUID accountId) {
-//        findById(userId);
-//        accountRepository.deleteById(userId);
-//
-//        log.info("User delete successfully - User ID: {}", userId);
+        AccountModel account = getOne(accountId);
+
+        account.setStatus(AccountStatus.CLOSED);
+        account.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        account = accountRepository.save(account);
+
+        log.info("Account closed successfully - Account ID: {}", account);
     }
 }
