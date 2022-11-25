@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
-import validation.UsernameConstraint;
+import com.picpay.walletservice.validation.UsernameConstraint;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,21 +29,15 @@ public class UserDto implements Serializable {
     @JsonView(UserView.List.class)
     private UUID id;
 
-    @NotBlank(groups = UserView.Registration.class)
-    @Size(min = 4, max = 50, groups = UserView.Registration.class)
-    @UsernameConstraint(groups = UserView.Registration.class)
-    @JsonView(UserView.Registration.class)
-    private String username;
-
     @NotBlank(groups = {UserView.Registration.class, UserView.Update.class})
     @Email(groups = {UserView.Registration.class, UserView.Update.class})
     @JsonView({UserView.Registration.class, UserView.Update.class, UserView.List.class})
     private String email;
 
-    @NotBlank(groups = UserView.Registration.class)
-    @Size(min = 6, max = 20, groups = UserView.Registration.class)
+    @NotNull(groups = UserView.Registration.class)
+    @Size(min = 4, max = 4, groups = UserView.Registration.class)
     @JsonView(UserView.Registration.class)
-    private String password;
+    private Integer password;
 
     @NotBlank(groups = {UserView.Registration.class, UserView.Update.class})
     @Size(min = 3, max = 150, groups = {UserView.Registration.class, UserView.Update.class})

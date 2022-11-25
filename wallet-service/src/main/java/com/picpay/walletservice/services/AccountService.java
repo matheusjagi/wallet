@@ -11,9 +11,15 @@ public interface AccountService {
 
     AccountDto findById(UUID accountId);
 
+    AccountDto findByUserCpf(String cpf);
+
     AccountDto create(AccountDto accountDto);
 
     AccountDto updateTypeAccount(UUID accountId, AccountDto accountDto);
 
     void deleteById(UUID accountId);
+
+    AccountDto updateAccountAmount(UUID accountId, AccountDto accountDto);
+
+    void updateAccountAmount(UUID accountId, Double amount);
 }

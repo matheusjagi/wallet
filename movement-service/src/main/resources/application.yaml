@@ -1,21 +1,20 @@
 server:
-  port: 8081
+  port: 8082
   servlet:
-    context-path: '/picpay-wallet/'
+    context-path: '/picpay-movement'
   error:
     include-message: always
-    include-stacktrace: never
 
 spring:
   application:
-    name: picpay-wallet-service
+    name: picpay-movement-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/db-wallet
+    url: jdbc:postgresql://localhost:5432/db-movement
     username: admin
     password: admin
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       dialect: org.hibernate.dialect.PostgreSQLDialect
       jdbc:
         lob.non-contextual-creation: true
@@ -39,7 +38,7 @@ logging:
 picpay:
   api:
     url:
-      movement: 'http://picpay-movement-service'
+      wallet: 'http://picpay-wallet-service'
       timeline: 'http://picpay-timeline-service'
 
 eureka:

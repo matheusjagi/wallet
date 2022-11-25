@@ -5,11 +5,11 @@ spring:
     gateway:
       routes:
         - id: wallet-service
-          uri: lb://PICPAY-WALLET-SERVICE
+          uri: http://localhost:8081/
           predicates:
             - Path=/picpay-wallet/**
         - id: movement-service
-          uri: lb://PICPAY-MOVEMENT-SERVICE
+          uri: http://localhost:8082/
           predicates:
             - Path=/picpay-movement/**
         - id: timeline-service
@@ -23,3 +23,6 @@ eureka:
       default-zone: 'http://localhost:8761/eureka'
     instance:
       hostname: localhost
+
+server:
+  port: 8080

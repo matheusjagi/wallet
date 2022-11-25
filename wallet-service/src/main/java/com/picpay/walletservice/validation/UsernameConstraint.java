@@ -1,6 +1,6 @@
-package validation;
+package com.picpay.walletservice.validation;
 
-import validation.impl.UsernameConstraintImpl;
+import com.picpay.walletservice.validation.impl.UsernameConstraintImpl;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

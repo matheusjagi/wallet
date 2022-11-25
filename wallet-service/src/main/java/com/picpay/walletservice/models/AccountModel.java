@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,11 +18,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -49,8 +46,8 @@ public class AccountModel implements Serializable {
     @Column(nullable = false, length = 3)
     private String bankNumber;
 
-    @Column(nullable = false)
-    private Double balance;
+    @Column(nullable = false, precision=12, scale=2)
+    private Double amount;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
