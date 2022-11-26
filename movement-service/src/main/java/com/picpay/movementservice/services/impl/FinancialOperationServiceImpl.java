@@ -6,14 +6,15 @@ import com.picpay.movementservice.models.MovementModel;
 import com.picpay.movementservice.repositories.FinancialOperationRepository;
 import com.picpay.movementservice.repositories.MovementRepository;
 import com.picpay.movementservice.services.FinancialOperationService;
+import com.picpay.movementservice.services.utils.UtilsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Log4j2
 public class FinancialOperationServiceImpl implements FinancialOperationService {
@@ -24,14 +25,20 @@ public class FinancialOperationServiceImpl implements FinancialOperationService 
 
     @Override
     public void run(MovementDto movementDto) {
-        MovementModel movement = mapper.map(movementDto, MovementModel.class);
-        movementRepository.save(movement);
+        Boolean completedTransaction = UtilsService.createRandomBoolean();
 
-        movement.setEffectiveness(true);
+        MovementModel movement = mapper.map(movementDto, MovementModel.class);
+        movement.setEffectiveness(completedTransaction);
+
         FinancialOperationModel financialOperation = new FinancialOperationModel(
                 null, movementDto.getFinancialOperationType(), movement);
-
         financialOperationRepository.save(financialOperation);
+
+        if (!completedTransaction) {
+            log.error("Financial operation failed. Movement ID: {}", movement.getId());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Financial operation failed.");
+        }
+
         log.debug("Financial operation successfully. Movement ID: {}", movement.getId());
     }
 }

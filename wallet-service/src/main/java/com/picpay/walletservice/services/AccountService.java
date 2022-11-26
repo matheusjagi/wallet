@@ -22,4 +22,8 @@ public interface AccountService {
     AccountDto updateAccountAmount(UUID accountId, AccountDto accountDto);
 
     void updateAccountAmount(UUID accountId, Double amount);
+
+    void checkPassword(UUID accountId, Integer accountPassword);
+
+    AccountDto findByAccountInformation(String accountNumber, String accountAgency, String bankNumber);
 }

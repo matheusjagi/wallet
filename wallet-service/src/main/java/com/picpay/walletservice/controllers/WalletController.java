@@ -3,6 +3,7 @@ package com.picpay.walletservice.controllers;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.picpay.walletservice.dtos.AccountDto;
 import com.picpay.walletservice.dtos.FinancialOperationDto;
+import com.picpay.walletservice.dtos.PaymentDto;
 import com.picpay.walletservice.services.WalletService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -36,29 +38,27 @@ public class WalletController {
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<String> deposit(@RequestBody @Validated(FinancialOperationDto.FinancialOperationView.Withdraw.class)
-                                              @JsonView(FinancialOperationDto.FinancialOperationView.Withdraw.class)
+    public ResponseEntity<String> deposit(@RequestBody @Validated(FinancialOperationDto.FinancialOperationView.Deposit.class)
+                                              @JsonView(FinancialOperationDto.FinancialOperationView.Deposit.class)
                                               FinancialOperationDto financialOperationDto) {
         log.debug("POST request to deposit account: {}", financialOperationDto);
         walletService.deposit(financialOperationDto);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/payment/invoice")
-    @JsonView(AccountDto.AccountView.List.class)
-    public ResponseEntity<AccountDto> paymentInvoice(@PathVariable("id") UUID accountId,
-                                                     @RequestBody @Validated(AccountDto.AccountView.FinacialOperations.class)
-                                                     @JsonView(AccountDto.AccountView.FinacialOperations.class) AccountDto accountDto) {
-        log.debug("POST request to payment invoice. Account ID: {}", accountDto);
-        return ResponseEntity.ok(walletService.paymentInvoice(accountId, accountDto));
+    @PostMapping("/payment/invoice")
+    public ResponseEntity<Void> paymentInvoice(@RequestBody @Valid PaymentDto paymentDto) {
+        log.debug("POST request to payment invoice. {}", paymentDto);
+        walletService.paymentInvoice(paymentDto);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/transfer")
-    @JsonView(AccountDto.AccountView.List.class)
-    public ResponseEntity<AccountDto> bankTransfer(@PathVariable("id") UUID accountSourceId,
-                                                   @RequestBody @Validated(AccountDto.AccountView.BankTransfer.class)
-                                                   @JsonView(AccountDto.AccountView.BankTransfer.class) AccountDto accountTarget) {
-        log.debug("POST request to transfer amount from account [{}] to account {}", accountSourceId, accountTarget);
-        return ResponseEntity.ok(walletService.bankTransfer(accountSourceId, accountTarget));
-    }
+//    @PostMapping("/{id}/transfer")
+//    @JsonView(AccountDto.AccountView.List.class)
+//    public ResponseEntity<AccountDto> bankTransfer(@PathVariable("id") UUID accountSourceId,
+//                                                   @RequestBody @Validated(AccountDto.AccountView.BankTransfer.class)
+//                                                   @JsonView(AccountDto.AccountView.BankTransfer.class) AccountDto accountTarget) {
+//        log.debug("POST request to transfer amount from account [{}] to account {}", accountSourceId, accountTarget);
+//        return ResponseEntity.ok(walletService.bankTransfer(accountSourceId, accountTarget));
+//    }
 }

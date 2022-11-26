@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,9 +22,6 @@ public class AccountDto implements Serializable {
     public interface AccountView {
         public static interface Registration {}
         public static interface BalanceUpdate {}
-        public static interface FinacialOperations {}
-        public static interface BankTransfer {}
-        public static interface Payments {}
         public static interface Update {}
         public static interface List {}
     }
@@ -39,6 +37,10 @@ public class AccountDto implements Serializable {
 
     @JsonView(AccountView.List.class)
     private String bankNumber;
+
+    @NotNull(groups = AccountView.Registration.class)
+    @JsonView(AccountView.Registration.class)
+    private Integer password;
 
     @NotNull(groups = AccountView.BalanceUpdate.class)
     @JsonView({AccountView.List.class, AccountView.BalanceUpdate.class})

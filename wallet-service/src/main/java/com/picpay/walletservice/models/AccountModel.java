@@ -1,6 +1,7 @@
 package com.picpay.walletservice.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.picpay.walletservice.enums.AccountStatus;
 import com.picpay.walletservice.enums.AccountType;
@@ -45,6 +46,10 @@ public class AccountModel implements Serializable {
 
     @Column(nullable = false, length = 3)
     private String bankNumber;
+
+    @Column(nullable = false, length = 4)
+    @JsonIgnore
+    private Integer password;
 
     @Column(nullable = false, precision=12, scale=2)
     private Double amount;

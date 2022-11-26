@@ -53,7 +53,7 @@ public class MovementModel implements Serializable {
     private Double currentAmount;
 
     @Column(nullable = false)
-    private UUID accountId;
+    private UUID sourceAccountId;
 
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")

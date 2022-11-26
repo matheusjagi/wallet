@@ -2,6 +2,8 @@ package com.picpay.walletservice.services;
 
 import com.picpay.walletservice.dtos.AccountDto;
 import com.picpay.walletservice.dtos.FinancialOperationDto;
+import com.picpay.walletservice.dtos.PaymentDto;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -11,7 +13,7 @@ public interface WalletService {
 
     void deposit(FinancialOperationDto financialOperationDto);
 
-    AccountDto paymentInvoice(UUID accountId, AccountDto accountDto);
+    void paymentInvoice(PaymentDto paymentDto);
 
     AccountDto bankTransfer(UUID accountSourceId, AccountDto accountTarget);
 }

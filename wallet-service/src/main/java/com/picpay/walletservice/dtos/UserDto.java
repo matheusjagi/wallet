@@ -34,11 +34,6 @@ public class UserDto implements Serializable {
     @JsonView({UserView.Registration.class, UserView.Update.class, UserView.List.class})
     private String email;
 
-    @NotNull(groups = UserView.Registration.class)
-    @Size(min = 4, max = 4, groups = UserView.Registration.class)
-    @JsonView(UserView.Registration.class)
-    private Integer password;
-
     @NotBlank(groups = {UserView.Registration.class, UserView.Update.class})
     @Size(min = 3, max = 150, groups = {UserView.Registration.class, UserView.Update.class})
     @JsonView({UserView.Registration.class, UserView.Update.class, UserView.List.class})

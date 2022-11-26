@@ -55,8 +55,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto findByUserCpf(String cpf) {
-        AccountModel account = accountRepository.findByUserCpfAndStatus(cpf, AccountStatus.ACTIVE.name())
+        AccountModel account = accountRepository.findByUserCpfAndStatus(cpf, AccountStatus.ACTIVE)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no account linked or active to this cpf."));
+
+        return mapper.map(account, AccountDto.class);
+    }
+
+    @Override
+    public AccountDto findByAccountInformation(String accountNumber, String accountAgency, String bankNumber) {
+        AccountModel account = accountRepository.findByNumberAndAgencyAndBankNumberAndStatus(accountNumber,
+                        accountAgency, bankNumber, AccountStatus.ACTIVE)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "There is no account linked or active for this information."));
 
         return mapper.map(account, AccountDto.class);
     }
@@ -134,5 +144,12 @@ public class AccountServiceImpl implements AccountService {
         account = accountRepository.save(account);
 
         log.info("Update amount successfully - Account ID: {}", account);
+    }
+
+    @Override
+    public void checkPassword(UUID accountId, Integer accountPassword) {
+        if (!accountRepository.validatePassword(accountId, accountPassword)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Password incorrect.");
+        }
     }
 }

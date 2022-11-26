@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -19,6 +20,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MovementDto implements Serializable {
 
@@ -28,42 +31,42 @@ public class MovementDto implements Serializable {
         public static interface Payments {}
     }
 
+    private UUID id;
+
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
-            MovementView.Payments.class,})
+            MovementView.Payments.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime movementDate;
 
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
-            MovementView.Payments.class,})
+            MovementView.Payments.class})
     private String description;
 
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
-            MovementView.Payments.class,})
+            MovementView.Payments.class})
     private Double transactionAmount;
 
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
-            MovementView.Payments.class,})
+            MovementView.Payments.class})
     private MovementType type;
 
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
-            MovementView.Payments.class,})
+            MovementView.Payments.class})
     private Double previousAmount;
 
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
-            MovementView.Payments.class,})
+            MovementView.Payments.class})
     private Double currentAmount;
 
+    @NotNull(groups = {MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
+            MovementView.Payments.class})
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
-            MovementView.Payments.class,})
-    private UUID accountId;
+            MovementView.Payments.class})
+    private UUID sourceAccountId;
 
     @NotBlank(groups = MovementView.FinacialOperations.class)
     @JsonView(MovementView.FinacialOperations.class)
     private FinancialOperationType financialOperationType;
-
-    @NotBlank(groups = MovementView.BankTransfer.class)
-    @JsonView(MovementView.BankTransfer.class)
-    private UUID sourceAccountId;
 
     @NotBlank(groups = MovementView.BankTransfer.class)
     @JsonView(MovementView.BankTransfer.class)

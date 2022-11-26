@@ -43,10 +43,6 @@ public class UserModel implements Serializable {
     @Column(nullable = false, length = 14)
     private String phoneNumber;
 
-    @Column(nullable = false, length = 4)
-    @JsonIgnore
-    private Integer password;
-
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime creationDate;

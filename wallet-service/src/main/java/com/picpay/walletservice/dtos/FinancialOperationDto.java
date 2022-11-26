@@ -23,7 +23,7 @@ public class FinancialOperationDto implements Serializable {
     @JsonView(FinancialOperationDto.FinancialOperationView.Withdraw.class)
     private String userCpf;
 
-    @NotBlank(groups = FinancialOperationDto.FinancialOperationView.Withdraw.class)
+    @NotNull(groups = FinancialOperationDto.FinancialOperationView.Withdraw.class)
     @JsonView(FinancialOperationDto.FinancialOperationView.Withdraw.class)
     private Integer accountPassword;
 
