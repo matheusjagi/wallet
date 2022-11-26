@@ -14,7 +14,7 @@ spring:
     password: admin
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       dialect: org.hibernate.dialect.PostgreSQLDialect
       jdbc:
         lob.non-contextual-creation: true
@@ -27,6 +27,18 @@ spring:
   jackson:
     mapper:
       DEFAULT_VIEW_INCLUSION: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2000
+          max-attempts: 3
+          max-interval: 3000
 
 logging:
   level:
@@ -40,6 +52,21 @@ picpay:
     url:
       wallet: 'http://picpay-wallet-service'
       timeline: 'http://picpay-timeline-service'
+  broker:
+    exchange:
+      movementEventExchange: picpay.movementevent
+      dlqExchange: picpay.dlq
+    queue:
+      paymentEventQueue:
+        dlq: dlq.payment
+        name: picpay.walletevent.ms.movement.payment
+      bankTransferEventQueue:
+        dlq: dlq.banktransfer
+        name: picpay.walletevent.ms.movement.banktransfer
+    key:
+      paymentKey: ms.movement.payment
+      bankTransferKey: ms.movement.banktransfer
+
 
 eureka:
   client:
