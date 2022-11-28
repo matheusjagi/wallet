@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaymentEventPublisher {
+public class BankTransferEventPublisher {
 
     @Autowired
     RabbitTemplate rabbitTemplate;
@@ -15,10 +15,10 @@ public class PaymentEventPublisher {
     @Value("${picpay.broker.exchange.movementEvent}")
     private String movementEventExchange;
 
-    @Value("${picpay.broker.key.paymentKey}")
-    private String paymentEventKey;
+    @Value("${picpay.broker.key.bankTransferKey}")
+    private String bankTransferEventKey;
 
     public void publisher(MovementEventDto movementEventDto) {
-        rabbitTemplate.convertAndSend(movementEventExchange, paymentEventKey, movementEventDto);
+        rabbitTemplate.convertAndSend(movementEventExchange, bankTransferEventKey, movementEventDto);
     }
 }

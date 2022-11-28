@@ -77,15 +77,6 @@ public class AccountController {
         return ResponseEntity.ok(accountService.updateTypeAccount(accountId, accountDto));
     }
 
-    @PatchMapping("/{id}/balance")
-    @JsonView(AccountDto.AccountView.List.class)
-    public ResponseEntity<AccountDto> updateBalance(@PathVariable("id") UUID accountId,
-                                                    @RequestBody @Validated(AccountDto.AccountView.BalanceUpdate.class)
-                                                    @JsonView(AccountDto.AccountView.BalanceUpdate.class) AccountDto accountDto) {
-        log.debug("PATCH request to updated balance account: {}", accountDto);
-        return ResponseEntity.ok(accountService.updateAccountAmount(accountId, accountDto));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> delete(@PathVariable(value = "id") UUID accountId) {
         log.debug("DELETE request to delete a account with ID: {}", accountId);

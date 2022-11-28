@@ -1,13 +1,10 @@
 package com.picpay.walletservice.clients;
 
-import com.picpay.walletservice.dtos.AccountDto;
 import com.picpay.walletservice.dtos.MovementDto;
-import com.picpay.walletservice.enums.FinancialOperationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;

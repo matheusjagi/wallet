@@ -1,13 +1,13 @@
-package com.picpay.walletservice.publishers;
+package com.picpay.movementservice.publishers;
 
-import com.picpay.walletservice.dtos.events.MovementEventDto;
+import com.picpay.movementservice.dtos.events.UpdateAmountEventDto;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PaymentEventPublisher {
+public class UpdateAmountEventPublisher {
 
     @Autowired
     RabbitTemplate rabbitTemplate;
@@ -16,9 +16,9 @@ public class PaymentEventPublisher {
     private String movementEventExchange;
 
     @Value("${picpay.broker.key.paymentKey}")
-    private String paymentEventKey;
+    private String updateAmountKey;
 
-    public void publisher(MovementEventDto movementEventDto) {
-        rabbitTemplate.convertAndSend(movementEventExchange, paymentEventKey, movementEventDto);
+    public void publisher(UpdateAmountEventDto updateAmountEventDto) {
+        rabbitTemplate.convertAndSend(movementEventExchange, updateAmountKey, updateAmountEventDto);
     }
 }

@@ -30,10 +30,7 @@ public class BankTransferModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-
-    @Column(nullable = false)
-    private UUID sourceAccountId;
-
+    
     @Column(nullable = false)
     private UUID targetAccountId;
 

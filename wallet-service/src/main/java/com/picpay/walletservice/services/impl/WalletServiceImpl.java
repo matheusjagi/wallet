@@ -2,12 +2,14 @@ package com.picpay.walletservice.services.impl;
 
 import com.picpay.walletservice.clients.MovementClient;
 import com.picpay.walletservice.dtos.AccountDto;
+import com.picpay.walletservice.dtos.BankTransferDto;
 import com.picpay.walletservice.dtos.FinancialOperationDto;
 import com.picpay.walletservice.dtos.MovementDto;
 import com.picpay.walletservice.dtos.PaymentDto;
 import com.picpay.walletservice.dtos.events.MovementEventDto;
 import com.picpay.walletservice.enums.FinancialOperationType;
 import com.picpay.walletservice.enums.MovementType;
+import com.picpay.walletservice.publishers.BankTransferEventPublisher;
 import com.picpay.walletservice.publishers.PaymentEventPublisher;
 import com.picpay.walletservice.services.AccountService;
 import com.picpay.walletservice.services.WalletService;
@@ -33,6 +35,7 @@ public class WalletServiceImpl implements WalletService {
     private final AccountService accountService;
     private final ModelMapper mapper;
     private final PaymentEventPublisher paymentEventPublisher;
+    private final BankTransferEventPublisher bankTransferEventPublisher;
 
     @Override
     public void withdraw(FinancialOperationDto financialOperationDto) {
@@ -46,7 +49,9 @@ public class WalletServiceImpl implements WalletService {
                 FinancialOperationType.WITHDRAW);
 
         movementClient.withdraw(movementDto);
-        accountService.updateAccountAmount(accountDto.getId(), currentAmount);
+
+        accountService.updateAccountAmount(FinancialOperationType.WITHDRAW.name(), accountDto.getId(),
+                financialOperationDto.getOperationAmount());
     }
 
     private void checkEnoughBalance(Double currentAmount) {
@@ -65,7 +70,9 @@ public class WalletServiceImpl implements WalletService {
                 FinancialOperationType.DEPOSIT);
 
         movementClient.deposit(movementDto);
-        accountService.updateAccountAmount(accountDto.getId(), currentAmount);
+
+        accountService.updateAccountAmount(FinancialOperationType.DEPOSIT.name(), accountDto.getId(),
+                financialOperationDto.getOperationAmount());
     }
 
     @Override
@@ -79,12 +86,24 @@ public class WalletServiceImpl implements WalletService {
         MovementEventDto movementEventDto = mapper.map(createMovementDto(paymentDto, currentAmount, accountDto),
                 MovementEventDto.class);
 
-        paymentEventPublisher.publisherWalletEvent(movementEventDto);
+        paymentEventPublisher.publisher(movementEventDto);
     }
 
     @Override
-    public AccountDto bankTransfer(UUID accountSourceId, AccountDto accountTarget) {
-        return null;
+    public void bankTransfer(BankTransferDto bankTransferDto) {
+        AccountDto accountSourceDto = accountService.findByUserCpf(bankTransferDto.getUserCpf());
+        accountService.checkPassword(accountSourceDto.getId(), bankTransferDto.getAccountPassword());
+
+        Double currentAmount = accountSourceDto.getAmount() - bankTransferDto.getOperationAmount();
+        checkEnoughBalance(currentAmount);
+
+        AccountDto accountTargetDto = accountService.findByAccountInformation(bankTransferDto.getAccountNumber(),
+                bankTransferDto.getAccountAgency(), bankTransferDto.getBankNumber());
+
+        MovementEventDto movementEventDto = mapper.map(createMovementDto(bankTransferDto, currentAmount, accountSourceDto,
+                        accountTargetDto.getId()), MovementEventDto.class);
+
+        bankTransferEventPublisher.publisher(movementEventDto);
     }
 
     private MovementDto createMovementDto(FinancialOperationDto financialOperationDto,
@@ -112,6 +131,20 @@ public class WalletServiceImpl implements WalletService {
                 .currentAmount(currentAmount)
                 .sourceAccountId(accountDto.getId())
                 .barcodeNumber(paymentDto.getBarcodeNumber())
+                .build();
+    }
+
+    private MovementDto createMovementDto(BankTransferDto bankTransferDto, Double currentAmount, AccountDto accountSourceDto ,
+                                          UUID targetAccountId) {
+        return MovementDto.builder()
+                .movementDate(LocalDateTime.now(ZoneId.of("UTC")))
+                .description(bankTransferDto.getDescription())
+                .transactionAmount(bankTransferDto.getOperationAmount())
+                .type(MovementType.BANK_TRANSFER)
+                .previousAmount(accountSourceDto.getAmount())
+                .currentAmount(currentAmount)
+                .sourceAccountId(accountSourceDto.getId())
+                .targetAccountId(targetAccountId)
                 .build();
     }
 }

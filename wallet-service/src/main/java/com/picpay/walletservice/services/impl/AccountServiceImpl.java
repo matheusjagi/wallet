@@ -1,8 +1,11 @@
 package com.picpay.walletservice.services.impl;
 
 import com.picpay.walletservice.dtos.AccountDto;
+import com.picpay.walletservice.dtos.events.UpdateAmountEventDto;
 import com.picpay.walletservice.enums.AccountStatus;
 import com.picpay.walletservice.enums.AccountType;
+import com.picpay.walletservice.enums.MovementType;
+import com.picpay.walletservice.enums.strategies.MovementStrategy;
 import com.picpay.walletservice.models.AccountModel;
 import com.picpay.walletservice.models.UserModel;
 import com.picpay.walletservice.repositories.AccountRepository;
@@ -128,22 +131,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto updateAccountAmount(UUID accountId, AccountDto accountDto) {
-        AccountModel account = getOne(accountId);
-        account.setAmount(accountDto.getAmount());
-        account = accountRepository.save(account);
+    public void updateAccountAmount(String movementType, UUID accountId, Double transactionAmount) {
+        MovementStrategy
+                .valueOf(movementType)
+                .updateAmount(accountRepository, accountId, transactionAmount);
 
-        log.info("Update amount successfully - Account ID: {}", account);
-        return mapper.map(account, AccountDto.class);
-    }
-
-    @Override
-    public void updateAccountAmount(UUID accountId, Double amount) {
-        AccountModel account = getOne(accountId);
-        account.setAmount(amount);
-        account = accountRepository.save(account);
-
-        log.info("Update amount successfully - Account ID: {}", account);
+        log.info("Update amount successfully - Account ID: {}", accountId);
     }
 
     @Override

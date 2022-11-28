@@ -49,9 +49,15 @@ picpay:
   broker:
     exchange:
       movementEvent: picpay.movementevent
+      dlqExchange: picpay.dlq
+    queue:
+      amountEventQueue:
+        dlq: dlq.updateamount
+        name: picpay.movementevent.ms.wallet.updateamount
     key:
       paymentKey: ms.movement.payment
       bankTransferKey: ms.movement.banktransfer
+      updateAmountKey: ms.wallet.updateamount
 
 eureka:
   client:

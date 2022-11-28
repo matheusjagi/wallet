@@ -4,7 +4,6 @@ import com.picpay.movementservice.dtos.MovementDto;
 import com.picpay.movementservice.models.FinancialOperationModel;
 import com.picpay.movementservice.models.MovementModel;
 import com.picpay.movementservice.repositories.FinancialOperationRepository;
-import com.picpay.movementservice.repositories.MovementRepository;
 import com.picpay.movementservice.services.FinancialOperationService;
 import com.picpay.movementservice.services.utils.UtilsService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class FinancialOperationServiceImpl implements FinancialOperationService {
 
     private final FinancialOperationRepository financialOperationRepository;
-    private final MovementRepository movementRepository;
     private final ModelMapper mapper;
 
     @Override

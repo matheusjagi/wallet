@@ -1,6 +1,7 @@
 package com.picpay.walletservice.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,8 +24,14 @@ public class BankTransferDto implements Serializable {
     private Double operationAmount;
 
     @NotBlank
-    private String barcodeNumber;
+    private String description;
 
     @NotBlank
-    private String description;
+    private String accountNumber;
+
+    @NotBlank
+    private String accountAgency;
+
+    @NotBlank
+    private String bankNumber;
 }

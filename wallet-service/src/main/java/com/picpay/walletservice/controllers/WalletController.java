@@ -2,6 +2,7 @@ package com.picpay.walletservice.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.picpay.walletservice.dtos.AccountDto;
+import com.picpay.walletservice.dtos.BankTransferDto;
 import com.picpay.walletservice.dtos.FinancialOperationDto;
 import com.picpay.walletservice.dtos.PaymentDto;
 import com.picpay.walletservice.services.WalletService;
@@ -53,12 +54,11 @@ public class WalletController {
         return ResponseEntity.ok().build();
     }
 
-//    @PostMapping("/{id}/transfer")
-//    @JsonView(AccountDto.AccountView.List.class)
-//    public ResponseEntity<AccountDto> bankTransfer(@PathVariable("id") UUID accountSourceId,
-//                                                   @RequestBody @Validated(AccountDto.AccountView.BankTransfer.class)
-//                                                   @JsonView(AccountDto.AccountView.BankTransfer.class) AccountDto accountTarget) {
-//        log.debug("POST request to transfer amount from account [{}] to account {}", accountSourceId, accountTarget);
-//        return ResponseEntity.ok(walletService.bankTransfer(accountSourceId, accountTarget));
-//    }
+    @PostMapping("/transfer")
+    @JsonView(AccountDto.AccountView.List.class)
+    public ResponseEntity<AccountDto> bankTransfer(@RequestBody @Valid BankTransferDto bankTransferDto) {
+        log.debug("POST request to transfer amount between accounts. {}", bankTransferDto);
+        walletService.bankTransfer(bankTransferDto);
+        return ResponseEntity.ok().build();
+    }
 }

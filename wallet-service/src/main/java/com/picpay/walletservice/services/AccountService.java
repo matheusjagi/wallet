@@ -1,6 +1,7 @@
 package com.picpay.walletservice.services;
 
 import com.picpay.walletservice.dtos.AccountDto;
+import com.picpay.walletservice.enums.MovementType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,9 +20,7 @@ public interface AccountService {
 
     void deleteById(UUID accountId);
 
-    AccountDto updateAccountAmount(UUID accountId, AccountDto accountDto);
-
-    void updateAccountAmount(UUID accountId, Double amount);
+    void updateAccountAmount(String movementType, UUID accountId, Double amount);
 
     void checkPassword(UUID accountId, Integer accountPassword);
 
