@@ -11,25 +11,25 @@ public enum MovementStrategy {
     BANK_TRANSFER{
         @Override
         public void updateAmount(AccountRepository accountRepository, UUID accountId, Double transactionAmount) {
-            accountRepository.aumentarSaldoDaConta(accountId, transactionAmount);
+            accountRepository.increaseAccountBalance(accountId, transactionAmount);
         }
     },
     PAYMENT{
         @Override
         public void updateAmount(AccountRepository accountRepository, UUID accountId, Double transactionAmount) {
-            accountRepository.diminuirSaldoDaConta(accountId, transactionAmount);
+            accountRepository.decreaseAccountBalance(accountId, transactionAmount);
         }
     },
     WITHDRAW {
         @Override
         public void updateAmount(AccountRepository accountRepository, UUID accountId, Double transactionAmount) {
-            accountRepository.diminuirSaldoDaConta(accountId, transactionAmount);
+            accountRepository.decreaseAccountBalance(accountId, transactionAmount);
         }
     },
     DEPOSIT {
         @Override
         public void updateAmount(AccountRepository accountRepository, UUID accountId, Double transactionAmount) {
-            accountRepository.aumentarSaldoDaConta(accountId, transactionAmount);
+            accountRepository.increaseAccountBalance(accountId, transactionAmount);
         }
     };
 

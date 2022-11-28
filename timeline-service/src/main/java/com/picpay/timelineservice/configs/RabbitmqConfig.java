@@ -1,4 +1,4 @@
-package com.picpay.walletservice.configs;
+package com.picpay.timelineservice.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -21,20 +21,14 @@ public class RabbitmqConfig {
     @Autowired
     CachingConnectionFactory cachingConnectionFactory;
 
-    @Value("${picpay.broker.exchange.movementEvent}")
+    @Value("${picpay.broker.exchange.movementEventExchange}")
     private String movementEventExchange;
 
-    @Value("${picpay.broker.exchange.dlqExchange}")
-    private String dlqExchange;
+    @Value("${picpay.broker.queue.timelineEventQueue.name}")
+    private String timelineEventQueue;
 
-    @Value("${picpay.broker.queue.amountEventQueue.name}")
-    private String updateAmountQueue;
-
-    @Value("${picpay.broker.queue.amountEventQueue.dlq}")
-    private String dlqUpdateAmount;
-
-    @Value("${picpay.broker.key.updateAmountKey}")
-    private String updateAmountKey;
+    @Value("${picpay.broker.key.timelineKey}")
+    private String timelineKey;
 
     @Bean
     TopicExchange movementsExchange() {
@@ -42,25 +36,18 @@ public class RabbitmqConfig {
     }
 
     @Bean
-    Queue updateAmountQueue() {
+    Queue timelineQueue() {
         return QueueBuilder
-                .durable(updateAmountQueue)
-                .deadLetterExchange(dlqExchange)
-                .deadLetterRoutingKey(dlqUpdateAmount)
+                .durable(timelineEventQueue)
                 .build();
     }
 
     @Bean
-    Queue deadLetterQueueUpdateAmount() {
-        return QueueBuilder.durable(dlqUpdateAmount).build();
-    }
-
-    @Bean
-    Binding bindingUpdateAmount() {
+    Binding bindingTimeline() {
         return BindingBuilder
-                .bind(updateAmountQueue())
+                .bind(timelineQueue())
                 .to(movementsExchange())
-                .with(updateAmountKey);
+                .with(timelineKey);
     }
 
     @Bean

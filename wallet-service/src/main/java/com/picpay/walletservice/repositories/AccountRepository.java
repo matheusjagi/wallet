@@ -22,17 +22,15 @@ public interface AccountRepository extends JpaRepository<AccountModel, UUID> {
 
     Optional<AccountModel> findByNumberAndAgencyAndBankNumberAndStatus(String number, String agency,
                                                                              String bankNumber, AccountStatus status);
-    //    Traduzir nome do metodo
     @Modifying
     @Query("update AccountModel account set account.amount = account.amount + :transactionAmount " +
             "where account.id = :accountId")
-    void aumentarSaldoDaConta(@Param("accountId") UUID accountId,
-                              @Param("transactionAmount") Double transactionAmount);
+    void increaseAccountBalance(@Param("accountId") UUID accountId,
+                                @Param("transactionAmount") Double transactionAmount);
 
-    //    Traduzir nome do metodo
     @Modifying
     @Query("update AccountModel account set account.amount = account.amount - :transactionAmount " +
             "where account.id = :accountId")
-    void diminuirSaldoDaConta(@Param("accountId") UUID accountId,
-                              @Param("transactionAmount") Double transactionAmount);
+    void decreaseAccountBalance(@Param("accountId") UUID accountId,
+                                @Param("transactionAmount") Double transactionAmount);
 }

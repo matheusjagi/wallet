@@ -33,7 +33,13 @@ spring:
     port: 5672
     username: admin
     password: admin
-
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2000
+          max-attempts: 3
+          max-interval: 3000
 logging:
   level:
     com.picpay: TRACE
@@ -58,6 +64,7 @@ picpay:
       paymentKey: ms.movement.payment
       bankTransferKey: ms.movement.banktransfer
       updateAmountKey: ms.wallet.updateamount
+      timelineKey: ms.timeline.newtimeline
 
 eureka:
   client:

@@ -7,10 +7,12 @@ import com.picpay.walletservice.dtos.FinancialOperationDto;
 import com.picpay.walletservice.dtos.MovementDto;
 import com.picpay.walletservice.dtos.PaymentDto;
 import com.picpay.walletservice.dtos.events.MovementEventDto;
+import com.picpay.walletservice.dtos.events.TimelineEventDto;
 import com.picpay.walletservice.enums.FinancialOperationType;
 import com.picpay.walletservice.enums.MovementType;
 import com.picpay.walletservice.publishers.BankTransferEventPublisher;
 import com.picpay.walletservice.publishers.PaymentEventPublisher;
+import com.picpay.walletservice.publishers.TimelineEventPublisher;
 import com.picpay.walletservice.services.AccountService;
 import com.picpay.walletservice.services.WalletService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class WalletServiceImpl implements WalletService {
     private final ModelMapper mapper;
     private final PaymentEventPublisher paymentEventPublisher;
     private final BankTransferEventPublisher bankTransferEventPublisher;
+    private final TimelineEventPublisher timelineEventPublisher;
 
     @Override
     public void withdraw(FinancialOperationDto financialOperationDto) {
@@ -52,6 +55,8 @@ public class WalletServiceImpl implements WalletService {
 
         accountService.updateAccountAmount(FinancialOperationType.WITHDRAW.name(), accountDto.getId(),
                 financialOperationDto.getOperationAmount());
+
+        timelineEventPublisher.publisher(createTimelineEventDto(accountDto, movementDto));
     }
 
     private void checkEnoughBalance(Double currentAmount) {
@@ -73,6 +78,8 @@ public class WalletServiceImpl implements WalletService {
 
         accountService.updateAccountAmount(FinancialOperationType.DEPOSIT.name(), accountDto.getId(),
                 financialOperationDto.getOperationAmount());
+
+        timelineEventPublisher.publisher(createTimelineEventDto(accountDto, movementDto));
     }
 
     @Override
@@ -87,6 +94,8 @@ public class WalletServiceImpl implements WalletService {
                 MovementEventDto.class);
 
         paymentEventPublisher.publisher(movementEventDto);
+
+        timelineEventPublisher.publisher(createTimelineEventDto(accountDto, movementEventDto));
     }
 
     @Override
@@ -104,11 +113,20 @@ public class WalletServiceImpl implements WalletService {
                         accountTargetDto.getId()), MovementEventDto.class);
 
         bankTransferEventPublisher.publisher(movementEventDto);
+
+        timelineEventPublisher.publisher(createTimelineEventDto(accountSourceDto, movementEventDto));
     }
 
-    private MovementDto createMovementDto(FinancialOperationDto financialOperationDto,
-                                          Double currentAmount, AccountDto accountDto,
-                                          FinancialOperationType financialOperationType) {
+    private TimelineEventDto createTimelineEventDto(AccountDto accountDto, MovementDto movementDto) {
+        TimelineEventDto timelineEventDto = mapper.map(movementDto, TimelineEventDto.class);
+        timelineEventDto.setMovementType(movementDto.getType().name());
+        timelineEventDto.setUserId(accountDto.getUserId());
+        return timelineEventDto;
+    }
+
+    public MovementDto createMovementDto(FinancialOperationDto financialOperationDto,
+                                         Double currentAmount, AccountDto accountDto,
+                                         FinancialOperationType financialOperationType) {
         return MovementDto.builder()
                 .movementDate(LocalDateTime.now(ZoneId.of("UTC")))
                 .description(financialOperationDto.getDescription())

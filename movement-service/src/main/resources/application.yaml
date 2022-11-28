@@ -4,6 +4,7 @@ server:
     context-path: '/picpay-movement'
   error:
     include-message: always
+    include-stacktrace: never
 
 spring:
   application:

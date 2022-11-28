@@ -24,14 +24,14 @@ public class PaymentConsumer {
 
     @RabbitListener(queues = "${picpay.broker.queue.paymentEventQueue.name}")
     public void listen(@Payload MovementEventDto movementEventDto) {
-        log.info("Chegou a mensagem na fila PAYMENT: {}", movementEventDto);
+        log.info("Message delivered to queue PAYMENT: {}", movementEventDto);
 
-        Boolean messageFailed = UtilsService.createRandomBoolean();
-
-        if (!messageFailed) {
-            log.error("Message failed to listener payment.");
-            throw new RuntimeException("Message failed to listener payment.");
-        }
+//        Boolean messageFailed = UtilsService.createRandomBoolean();
+//
+//        if (!messageFailed) {
+//            log.error("Message failed to listener payment.");
+//            throw new RuntimeException("Message failed to listener payment.");
+//        }
 
         paymentService.paymentInvoice(mapper.map(movementEventDto, MovementDto.class));
     }

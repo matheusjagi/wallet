@@ -12,10 +12,10 @@ public class UpdateAmountEventPublisher {
     @Autowired
     RabbitTemplate rabbitTemplate;
 
-    @Value("${picpay.broker.exchange.movementEvent}")
+    @Value("${picpay.broker.exchange.movementEventExchange}")
     private String movementEventExchange;
 
-    @Value("${picpay.broker.key.paymentKey}")
+    @Value("${picpay.broker.key.updateAmountKey}")
     private String updateAmountKey;
 
     public void publisher(UpdateAmountEventDto updateAmountEventDto) {
