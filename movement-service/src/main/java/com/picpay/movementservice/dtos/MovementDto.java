@@ -46,6 +46,10 @@ public class MovementDto implements Serializable {
 
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
             MovementView.Payments.class})
+    private Boolean effectiveness;
+
+    @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,
+            MovementView.Payments.class})
     private Double previousAmount;
 
     @JsonView({MovementView.FinacialOperations.class, MovementView.BankTransfer.class,

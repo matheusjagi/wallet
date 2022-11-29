@@ -35,6 +35,8 @@ public class TimelineDocument {
 
     private String movementType;
 
+    private Boolean effectiveness;
+
     private Double previousAmount;
 
     private Double currentAmount;

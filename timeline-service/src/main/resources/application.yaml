@@ -27,8 +27,9 @@ spring:
           initial-interval: 2000
           max-attempts: 3
           max-interval: 3000
-  elasticsearch:
-    uris: http://localhost:9200
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 logging:
   level:
@@ -40,7 +41,7 @@ logging:
 picpay:
   broker:
     exchange:
-      movementEventExchange: picpay.movementevent
+      timelineEventExchange: picpay.timelineevent
     queue:
       timelineEventQueue:
         name: picpay.ms.timeline.newtimeline
@@ -53,3 +54,8 @@ eureka:
       default-zone: 'http://localhost:8761/eureka'
     instance:
       hostname: localhost
+
+api:
+  version: 2022-11-28
+release:
+  version: 1.0.0

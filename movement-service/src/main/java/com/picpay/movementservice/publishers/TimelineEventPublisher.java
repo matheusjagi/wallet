@@ -1,6 +1,6 @@
-package com.picpay.walletservice.publishers;
+package com.picpay.movementservice.publishers;
 
-import com.picpay.walletservice.dtos.events.TimelineEventDto;
+import com.picpay.movementservice.dtos.events.TimelineEventDto;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

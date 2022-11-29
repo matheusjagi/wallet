@@ -21,8 +21,8 @@ public class RabbitmqConfig {
     @Autowired
     CachingConnectionFactory cachingConnectionFactory;
 
-    @Value("${picpay.broker.exchange.movementEventExchange}")
-    private String movementEventExchange;
+    @Value("${picpay.broker.exchange.timelineEventExchange}")
+    private String timelineEventExchange;
 
     @Value("${picpay.broker.queue.timelineEventQueue.name}")
     private String timelineEventQueue;
@@ -31,8 +31,8 @@ public class RabbitmqConfig {
     private String timelineKey;
 
     @Bean
-    TopicExchange movementsExchange() {
-        return new TopicExchange(movementEventExchange);
+    TopicExchange timelineExchange() {
+        return new TopicExchange(timelineEventExchange);
     }
 
     @Bean
@@ -46,7 +46,7 @@ public class RabbitmqConfig {
     Binding bindingTimeline() {
         return BindingBuilder
                 .bind(timelineQueue())
-                .to(movementsExchange())
+                .to(timelineExchange())
                 .with(timelineKey);
     }
 

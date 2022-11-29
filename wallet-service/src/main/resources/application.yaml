@@ -40,6 +40,9 @@ spring:
           initial-interval: 2000
           max-attempts: 3
           max-interval: 3000
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 logging:
   level:
     com.picpay: TRACE
@@ -51,11 +54,11 @@ picpay:
   api:
     url:
       movement: 'http://picpay-movement-service'
-      timeline: 'http://picpay-timeline-service'
   broker:
     exchange:
       movementEvent: picpay.movementevent
       dlqExchange: picpay.dlq
+      timelineEventExchange: picpay.timelineevent
     queue:
       amountEventQueue:
         dlq: dlq.updateamount
@@ -72,3 +75,8 @@ eureka:
       default-zone: 'http://localhost:8761/eureka'
     instance:
       hostname: localhost
+
+api:
+  version: 2022-11-28
+release:
+  version: 1.0.0

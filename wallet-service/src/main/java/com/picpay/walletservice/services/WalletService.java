@@ -1,12 +1,8 @@
 package com.picpay.walletservice.services;
 
-import com.picpay.walletservice.dtos.AccountDto;
 import com.picpay.walletservice.dtos.BankTransferDto;
 import com.picpay.walletservice.dtos.FinancialOperationDto;
 import com.picpay.walletservice.dtos.PaymentDto;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.UUID;
 
 public interface WalletService {
 

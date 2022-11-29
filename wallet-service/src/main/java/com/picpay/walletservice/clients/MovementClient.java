@@ -1,14 +1,16 @@
 package com.picpay.walletservice.clients;
 
 import com.picpay.walletservice.dtos.MovementDto;
+import com.picpay.walletservice.exceptions.DepositOperationException;
+import com.picpay.walletservice.exceptions.WithdrawalOperationException;
+import com.picpay.walletservice.publishers.TimelineEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
@@ -17,11 +19,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class MovementClient {
 
     private final RestTemplate restTemplate;
+    private final TimelineEventPublisher timelineEventPublisher;
 
     @Value("${picpay.api.url.movement}")
     private String REQUEST_URI_MOVEMENT;
 
-    public void withdraw(MovementDto movementDto) {
+    public void withdraw(MovementDto movementDto) throws HttpClientErrorException {
         String uri = UriComponentsBuilder.fromUriString(REQUEST_URI_MOVEMENT)
                 .path("/picpay-movement")
                 .path("/movements/financial-operations")
@@ -31,8 +34,7 @@ public class MovementClient {
         try {
             restTemplate.postForObject(uri, movementDto, MovementDto.class);
         } catch (HttpStatusCodeException error) {
-            log.error("Error performing withdrawal operation.", error);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error performing withdrawal operation.");
+            throw new WithdrawalOperationException();
         }
     }
 
@@ -46,8 +48,7 @@ public class MovementClient {
         try {
             restTemplate.postForObject(uri, movementDto, MovementDto.class);
         } catch (HttpStatusCodeException error) {
-            log.error("Error performing deposit operation.", error);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error performing deposit operation.");
+            throw new DepositOperationException();
         }
     }
 }

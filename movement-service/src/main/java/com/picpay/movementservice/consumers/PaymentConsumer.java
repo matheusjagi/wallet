@@ -26,12 +26,12 @@ public class PaymentConsumer {
     public void listen(@Payload MovementEventDto movementEventDto) {
         log.info("Message delivered to queue PAYMENT: {}", movementEventDto);
 
-//        Boolean messageFailed = UtilsService.createRandomBoolean();
-//
-//        if (!messageFailed) {
-//            log.error("Message failed to listener payment.");
-//            throw new RuntimeException("Message failed to listener payment.");
-//        }
+        Boolean messageFailed = UtilsService.createRandomBoolean();
+
+        if (!messageFailed) {
+            log.error("Message failed to listener payment.");
+            throw new RuntimeException("Message failed to listener payment.");
+        }
 
         paymentService.paymentInvoice(mapper.map(movementEventDto, MovementDto.class));
     }
