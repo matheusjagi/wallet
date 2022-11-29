@@ -1,0 +1,17 @@
+version: '1'
+services:
+  postgresql:
+    extends:
+      file: postgresql.yaml
+      service: postgresql
+    container_name: postgresql
+  elasticsearch:
+    extends:
+      file: elasticsearch.yaml
+      service: elasticsearch
+    container_name: elasticsearch
+  rabbitmq:
+    extends:
+      file: rabbitmq.yaml
+      service: rabbitmq
+    container_name: rabbitmq
