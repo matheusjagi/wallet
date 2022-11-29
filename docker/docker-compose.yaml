@@ -1,17 +1,95 @@
-version: '1'
+version: '1.0.0'
+
 services:
+
   postgresql:
     extends:
       file: postgresql.yaml
       service: postgresql
     container_name: postgresql
+
   elasticsearch:
     extends:
       file: elasticsearch.yaml
       service: elasticsearch
     container_name: elasticsearch
+
   rabbitmq:
     extends:
       file: rabbitmq.yaml
       service: rabbitmq
     container_name: rabbitmq
+
+  service-registry:
+    container_name: service-registry
+    image: service-registry-img
+    build:
+      context: ../service-registry/
+      dockerfile: Dockerfile
+    ports:
+      - 8761:8761
+    restart: always
+    networks:
+      - spring-cloud-network 
+
+  api-gateway:
+    container_name: api-gateway
+    image: api-gateway-img
+    build:
+      context: ../api-gateway/
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    restart: always
+    networks:
+      - spring-cloud-network 
+
+  wallet-service:
+    container_name: wallet-service
+    image: wallet-service-img
+    build:
+      context: ../wallet-service/
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+      - rabbitmq
+    ports:
+      - 8081:8081
+    restart: always
+    networks:
+      - spring-cloud-network
+  
+  movement-service:
+    container_name: movement-service
+    image: movement-service-img
+    build:
+      context: ../movement-service/
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+      - rabbitmq
+    ports:
+      - 8082:8082
+    restart: always
+    networks:
+      - spring-cloud-network 
+
+  timeline-service:
+    container_name: timeline-service
+    image: timeline-service-img
+    build:
+      context: ../timeline-service/
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+      - rabbitmq
+      - elasticsearch
+    ports:
+      - 8083:8083
+    restart: always
+    networks:
+      - spring-cloud-network
+
+networks:
+    spring-cloud-network:
+        driver: bridge
