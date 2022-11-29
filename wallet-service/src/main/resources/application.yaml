@@ -1,9 +1,10 @@
 server:
   port: 8081
   servlet:
-    context-path: '/picpay-wallet'
+    context-path: '/picpay-wallet/'
   error:
     include-message: always
+    include-stacktrace: never
 
 spring:
   application:
@@ -27,7 +28,21 @@ spring:
   jackson:
     mapper:
       DEFAULT_VIEW_INCLUSION: true
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2000
+          max-attempts: 3
+          max-interval: 3000
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 logging:
   level:
     com.picpay: TRACE
@@ -39,7 +54,20 @@ picpay:
   api:
     url:
       movement: 'http://picpay-movement-service'
-      timeline: 'http://picpay-timeline-service'
+  broker:
+    exchange:
+      movementEvent: picpay.movementevent
+      dlqExchange: picpay.dlq
+      timelineEventExchange: picpay.timelineevent
+    queue:
+      amountEventQueue:
+        dlq: dlq.updateamount
+        name: picpay.movementevent.ms.wallet.updateamount
+    key:
+      paymentKey: ms.movement.payment
+      bankTransferKey: ms.movement.banktransfer
+      updateAmountKey: ms.wallet.updateamount
+      timelineKey: ms.timeline.newtimeline
 
 eureka:
   client:
@@ -47,3 +75,8 @@ eureka:
       default-zone: 'http://localhost:8761/eureka'
     instance:
       hostname: localhost
+
+api:
+  version: 2022-11-28
+release:
+  version: 1.0.0

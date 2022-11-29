@@ -1,4 +1,4 @@
-version: '2'
+version: '1'
 services:
   postgresql:
     extends:
@@ -10,3 +10,8 @@ services:
       file: elasticsearch.yaml
       service: elasticsearch
     container_name: elasticsearch
+  rabbitmq:
+    extends:
+      file: rabbitmq.yaml
+      service: rabbitmq
+    container_name: rabbitmq
