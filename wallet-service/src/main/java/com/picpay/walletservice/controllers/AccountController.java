@@ -2,7 +2,6 @@ package com.picpay.walletservice.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.picpay.walletservice.dtos.AccountDto;
-import com.picpay.walletservice.dtos.UserDto;
 import com.picpay.walletservice.services.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -72,9 +71,9 @@ public class AccountController {
     @PatchMapping("/{id}")
     @JsonView(AccountDto.AccountView.List.class)
     public ResponseEntity<AccountDto> updateTypeAccount(@PathVariable("id") UUID accountId,
-                                                        @RequestBody @Validated(UserDto.UserView.Update.class)
-                                                        @JsonView(UserDto.UserView.Update.class) AccountDto accountDto) {
-        log.debug("PUT request to updated type account: {}", accountDto);
+                                                        @RequestBody @Validated(AccountDto.AccountView.Update.class)
+                                                        @JsonView(AccountDto.AccountView.Update.class) AccountDto accountDto) {
+        log.debug("PATCH request to updated type account: {}", accountDto);
         return ResponseEntity.ok(accountService.updateTypeAccount(accountId, accountDto));
     }
 

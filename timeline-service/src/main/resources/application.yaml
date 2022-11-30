@@ -1,0 +1,63 @@
+server:
+  port: 8083
+  servlet:
+    context-path: '/picpay-timeline'
+  error:
+    include-message: always
+    include-stacktrace: never
+
+spring:
+  application:
+    name: picpay-timeline-service
+  output:
+    ansi:
+      enabled: always
+  jackson:
+    mapper:
+      DEFAULT_VIEW_INCLUSION: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2000
+          max-attempts: 3
+          max-interval: 3000
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  elasticsearch:
+    uris: localhost:9200
+
+logging:
+  level:
+    com.picpay: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+picpay:
+  broker:
+    exchange:
+      timelineEventExchange: picpay.timelineevent
+    queue:
+      timelineEventQueue:
+        name: picpay.ms.timeline.newtimeline
+    key:
+      timelineKey: ms.timeline.newtimeline
+
+eureka:
+  client:
+    service-url:
+      default-zone: 'http://localhost:8761/eureka'
+    instance:
+      hostname: localhost
+
+api:
+  version: 2022-11-28
+release:
+  version: 1.0.0

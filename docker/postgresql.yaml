@@ -1,4 +1,4 @@
-version: '2'
+version: '11.5'
 services:
   postgresql:
     image: postgres:11.5
@@ -7,3 +7,5 @@ services:
       - POSTGRES_PASSWORD=admin
     ports:
       - 5432:5432
+    volumes:
+      - ./sql/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql

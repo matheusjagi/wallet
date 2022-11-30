@@ -1,0 +1,87 @@
+server:
+  port: 8082
+  servlet:
+    context-path: '/picpay-movement'
+  error:
+    include-message: always
+    include-stacktrace: never
+
+spring:
+  application:
+    name: picpay-movement-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_movement
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+  output:
+    ansi:
+      enabled: always
+  jackson:
+    mapper:
+      DEFAULT_VIEW_INCLUSION: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2000
+          max-attempts: 3
+          max-interval: 3000
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+logging:
+  level:
+    com.picpay: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+picpay:
+  api:
+    url:
+      wallet: 'http://picpay-wallet-service'
+      timeline: 'http://picpay-timeline-service'
+  broker:
+    exchange:
+      movementEventExchange: picpay.movementevent
+      dlqExchange: picpay.dlq
+      timelineEventExchange: picpay.timelineevent
+    queue:
+      paymentEventQueue:
+        dlq: dlq.payment
+        name: picpay.walletevent.ms.movement.payment
+      bankTransferEventQueue:
+        dlq: dlq.banktransfer
+        name: picpay.walletevent.ms.movement.banktransfer
+    key:
+      paymentKey: ms.movement.payment
+      bankTransferKey: ms.movement.banktransfer
+      updateAmountKey: ms.wallet.updateamount
+      timelineKey: ms.timeline.newtimeline
+
+eureka:
+  client:
+    service-url:
+      default-zone: 'http://localhost:8761/eureka'
+    instance:
+      hostname: localhost
+
+api:
+  version: 2022-11-28
+release:
+  version: 1.0.0

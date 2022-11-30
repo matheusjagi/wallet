@@ -1,8 +1,11 @@
 package com.picpay.walletservice.services.impl;
 
 import com.picpay.walletservice.dtos.AccountDto;
+import com.picpay.walletservice.dtos.events.UpdateAmountEventDto;
 import com.picpay.walletservice.enums.AccountStatus;
 import com.picpay.walletservice.enums.AccountType;
+import com.picpay.walletservice.enums.MovementType;
+import com.picpay.walletservice.enums.strategies.MovementStrategy;
 import com.picpay.walletservice.models.AccountModel;
 import com.picpay.walletservice.models.UserModel;
 import com.picpay.walletservice.repositories.AccountRepository;
@@ -53,6 +56,24 @@ public class AccountServiceImpl implements AccountService {
         return mapper.map(account, AccountDto.class);
     }
 
+    @Override
+    public AccountDto findByUserCpf(String cpf) {
+        AccountModel account = accountRepository.findByUserCpfAndStatus(cpf, AccountStatus.ACTIVE)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no account linked or active to this cpf."));
+
+        return mapper.map(account, AccountDto.class);
+    }
+
+    @Override
+    public AccountDto findByAccountInformation(String accountNumber, String accountAgency, String bankNumber) {
+        AccountModel account = accountRepository.findByNumberAndAgencyAndBankNumberAndStatus(accountNumber,
+                        accountAgency, bankNumber, AccountStatus.ACTIVE)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "There is no account linked or active for this information."));
+
+        return mapper.map(account, AccountDto.class);
+    }
+
     private AccountModel getOne(UUID accountId) {
         return mapper.map(findById(accountId), AccountModel.class);
     }
@@ -60,12 +81,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDto create(AccountDto accountDto) {
         UserModel user = mapper.map(userService.findById(accountDto.getUserId()), UserModel.class);
+        checkUserAlreadyHasAccount(user);
         AccountModel account = mapper.map(accountDto, AccountModel.class);
 
         account.setNumber(UtilsService.createRandomNumber(10L));
         account.setAgency("0009");
         account.setBankNumber("999");
-        account.setBalance(0.0);
+        account.setAmount(0.0);
         account.setStatus(AccountStatus.ACTIVE);
         account.setType(AccountType.valueOf(accountDto.getType()));
         account.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
@@ -76,6 +98,12 @@ public class AccountServiceImpl implements AccountService {
 
         log.info("Account saved successfully - Account ID: {}", account.getId());
         return mapper.map(account, AccountDto.class);
+    }
+
+    private void checkUserAlreadyHasAccount(UserModel user) {
+        if (accountRepository.existsByUserId(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This user already has an account");
+        }
     }
 
     @Override
@@ -100,5 +128,21 @@ public class AccountServiceImpl implements AccountService {
         account = accountRepository.save(account);
 
         log.info("Account closed successfully - Account ID: {}", account);
+    }
+
+    @Override
+    public void updateAccountAmount(String movementType, UUID accountId, Double transactionAmount) {
+        MovementStrategy
+                .valueOf(movementType)
+                .updateAmount(accountRepository, accountId, transactionAmount);
+
+        log.info("Update amount successfully - Account ID: {}", accountId);
+    }
+
+    @Override
+    public void checkPassword(UUID accountId, Integer accountPassword) {
+        if (!accountRepository.validatePassword(accountId, accountPassword)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Password incorrect.");
+        }
     }
 }
