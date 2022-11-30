@@ -30,6 +30,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  elasticsearch:
+    uris: localhost:9200
 
 logging:
   level:

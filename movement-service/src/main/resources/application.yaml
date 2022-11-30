@@ -10,7 +10,7 @@ spring:
   application:
     name: picpay-movement-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/db-movement
+    url: jdbc:postgresql://localhost:5432/db_movement
     username: admin
     password: admin
   jpa:

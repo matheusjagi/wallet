@@ -10,7 +10,7 @@ spring:
   application:
     name: picpay-wallet-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/db-wallet
+    url: jdbc:postgresql://localhost:5432/db_wallet
     username: admin
     password: admin
   jpa:
@@ -43,6 +43,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
 logging:
   level:
     com.picpay: TRACE
