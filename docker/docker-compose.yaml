@@ -1,17 +1,103 @@
-version: '1'
+version: '2'
+
 services:
+
   postgresql:
     extends:
       file: postgresql.yaml
       service: postgresql
     container_name: postgresql
+
   elasticsearch:
     extends:
       file: elasticsearch.yaml
       service: elasticsearch
     container_name: elasticsearch
+
   rabbitmq:
     extends:
       file: rabbitmq.yaml
       service: rabbitmq
     container_name: rabbitmq
+
+  service-registry:
+    container_name: service-registry
+    image: service-registry-img
+    build:
+      context: ../service-registry/
+      dockerfile: Dockerfile
+    ports:
+      - 8761:8761
+
+  api-gateway:
+    container_name: api-gateway
+    image: api-gateway-img
+    build:
+      context: ../api-gateway/
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      eureka.host: service-registry
+      eureka.instance.preferIpAddress: 'true'
+    depends_on:
+      - service-registry
+
+  wallet-service:
+    container_name: wallet-service
+    image: wallet-service-img
+    build:
+      context: ../wallet-service/
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    environment:
+      spring.datasource.url: jdbc:postgresql://postgresql:5432/db_wallet
+      spring.rabbitmq.host: rabbitmq
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      eureka.host: service-registry
+      eureka.instance.preferIpAddress: 'true'
+    depends_on:
+      - postgresql
+      - rabbitmq
+      - service-registry
+  
+  movement-service:
+    container_name: movement-service
+    image: movement-service-img
+    build:
+      context: ../movement-service/
+      dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    environment:
+      spring.datasource.url: jdbc:postgresql://postgresql:5432/db_movement
+      spring.rabbitmq.host: rabbitmq
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      eureka.host: service-registry
+      eureka.instance.preferIpAddress: 'true'
+    depends_on:
+      - postgresql
+      - rabbitmq
+      - service-registry
+
+  timeline-service:
+    container_name: timeline-service
+    image: timeline-service-img
+    build:
+      context: ../timeline-service/
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    environment:
+      spring.elasticsearch.uris: elasticsearch:9200
+      spring.rabbitmq.host: rabbitmq
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      eureka.host: service-registry
+      eureka.instance.preferIpAddress: 'true'
+    depends_on:
+      - postgresql
+      - rabbitmq
+      - elasticsearch
+      - service-registry

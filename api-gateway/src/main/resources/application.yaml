@@ -5,15 +5,15 @@ spring:
     gateway:
       routes:
         - id: wallet-service
-          uri: http://localhost:8081/
+          uri: lb://PICPAY-WALLET-SERVICE/
           predicates:
             - Path=/picpay-wallet/**
         - id: movement-service
-          uri: http://localhost:8082/
+          uri: lb://PICPAY-MOVEMENT-SERVICE/
           predicates:
             - Path=/picpay-movement/**
         - id: timeline-service
-          uri: http://localhost:8083/
+          uri: lb://PICPAY-TIMELINE-SERVICE/
           predicates:
             - Path=/picpay-timeline/**
 
