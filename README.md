@@ -4,11 +4,11 @@ Sistema projetado para criação de uma carteira digital para realização de op
 
 ## Arquitetura dos microsserviços
 
-![Alt](images/architectural-design.png)
+![](images/architectural-design.png)
 
 ## Arquitetura de comunicação da filas
 
-![Alt](images/architectural-queues.png)
+![](images/architectural-queues.png)
 
 ## Tecnologias utilizadas
 - Spring Boot Starter Web
@@ -25,7 +25,7 @@ Sistema projetado para criação de uma carteira digital para realização de op
 - Docker
 
 ## Requisitos
-Para montar o ambiente do projeto é essencial os componentes abaixo para sua correta
+Para montar o ambiente do projeto é essencial os componentes abaixo para sua correta construção
 
 - Java 17
 - Maven 3.8.6
@@ -35,9 +35,13 @@ Para montar o ambiente do projeto é essencial os componentes abaixo para sua co
 
 Navegue até a pasta `docker` do projeto;
 
-Abre um terminal de sua preferência e execute o sgeuinte comando:
+Abra um terminal de sua preferência e execute o seguinte comando:
 
 `$ docker-compose up -d`
+
+Depois confira se todos os containers foram inicializados:
+
+`$ docker ps`
 
 ## Links auxiliares
 
