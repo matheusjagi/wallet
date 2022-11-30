@@ -1,31 +1,60 @@
-# PICPAY WALLET - Projeto desenvolvido para desafio de processo seletivo
+# WALLET - Sua carteira virtual
 
-Sistema projetado para criação de uma carteira digital para realização de operações financeiras básicas como: transferência de valores entre usuários, saques, depósitos e pagamento de contas. A solução foi construida no modelo de microservices usando as tecnologias mais usadas do Spring, contendo comunicações sincronas e assincronas se utilizando de filas de processamento.
+Sistema projetado para criação de uma carteira digital para realização de operações financeiras básicas como: transferência de valores entre usuários, saques, depósitos e pagamento de contas. A solução foi construida no modelo de uma API Rest se utilizando de microsserviços, usando as tecnologias mais usadas do Spring, contendo comunicações sincronas e assincronas se utilizando de filas de processamento.
 
-## Arquitetura dos microservices
+## Arquitetura dos microsserviços
 
+![Alt](images/architectural-design.png)
+
+## Arquitetura de comunicação da filas
+
+![Alt](images/architectural-queues.png)
 
 ## Tecnologias utilizadas
-- Swagger
-- Rabbitmq
-- Spring data JPA
-- Spring data Elasticsearch
-- Spring cloud Eureka
+- Spring Boot Starter Web
+- Swagger (Springfox)
+- Rabbitmq (Spring Boot Starter AMQP)
+- PostgreSQL (Spring Data JPA)
+- Elasticsearch (Spring Data Elasticsearch)
+- Eureka Discovery Client (Spring Cloud Discovery)
+- Eureka Server (Spring Cloud Discovery)
+- Gateway (Spring Cloud Routing)
+- Lombok
+- ModelMapper
+- Log4j2
+- Docker
 
 ## Requisitos
-Para montar o ambiente do projeto é necessário:
+Para montar o ambiente do projeto é essencial os componentes abaixo para sua correta
 
 - Java 17
+- Maven 3.8.6
 - Docker
-- Maven
 
-Para subir o ambiente AWS execute:
+## Construção do ambiente dockerizado
 
-`$ cdk deploy --all --parameters Rds:databasePassword=[PASSWORD]`
+Navegue até a pasta `docker` do projeto;
 
-## Configuração do Backend
-Este projeto foi desenvolvido utilizando a arquitetura Spring e conta com vários módulos para seu completo funcionamento.
+Abre um terminal de sua preferência e execute o sgeuinte comando:
 
-Para que seja devidamente preparado o ambiente para sua execução, deve-se executar o comando abaixo:
+`$ docker-compose up -d`
 
-`$ mvn clean install`
+## Links auxiliares
+
+- ### Service Registry
+    - http://localhost:8761/
+
+- ###  Rabbitmq
+    - http://localhost:15672/#/
+    - http://localhost:15672/#/exchanges
+    - http://localhost:15672/#/queues
+
+- ### Documentação
+    - http://localhost:8080/picpay-wallet/swagger-ui/index.html#/
+    - http://localhost:8080/picpay-movement/swagger-ui/index.html#/
+    - http://localhost:8080/picpay-timeline/swagger-ui/index.html#/
+
+## Navegue e se divirta pelo sistema!
+Com intuito de facilitar sua jornada, criei uma collection contendo todas as URLs necessárias para seu teste!
+
+[Click aqui para realizar o download](https://drive.google.com/u/0/uc?id=1VgmhMPZg-iOwZzd4T-iH-o0bXpiyW1fN&export=download)
