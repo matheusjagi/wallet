@@ -1,4 +1,4 @@
-version: '1.0.0'
+version: '2'
 
 services:
 
@@ -28,9 +28,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8761:8761
-    restart: always
-    networks:
-      - spring-cloud-network 
 
   api-gateway:
     container_name: api-gateway
@@ -40,9 +37,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
-    restart: always
-    networks:
-      - spring-cloud-network 
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      eureka.host: service-registry
+      eureka.instance.preferIpAddress: 'true'
+    depends_on:
+      - service-registry
 
   wallet-service:
     container_name: wallet-service
@@ -50,14 +50,18 @@ services:
     build:
       context: ../wallet-service/
       dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    environment:
+      spring.datasource.url: jdbc:postgresql://postgresql:5432/db_wallet
+      spring.rabbitmq.host: rabbitmq
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      eureka.host: service-registry
+      eureka.instance.preferIpAddress: 'true'
     depends_on:
       - postgresql
       - rabbitmq
-    ports:
-      - 8081:8081
-    restart: always
-    networks:
-      - spring-cloud-network
+      - service-registry
   
   movement-service:
     container_name: movement-service
@@ -65,14 +69,18 @@ services:
     build:
       context: ../movement-service/
       dockerfile: Dockerfile
+    ports:
+      - 8082:8082
+    environment:
+      spring.datasource.url: jdbc:postgresql://postgresql:5432/db_movement
+      spring.rabbitmq.host: rabbitmq
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      eureka.host: service-registry
+      eureka.instance.preferIpAddress: 'true'
     depends_on:
       - postgresql
       - rabbitmq
-    ports:
-      - 8082:8082
-    restart: always
-    networks:
-      - spring-cloud-network 
+      - service-registry
 
   timeline-service:
     container_name: timeline-service
@@ -80,16 +88,16 @@ services:
     build:
       context: ../timeline-service/
       dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    environment:
+      spring.elasticsearch.uris: elasticsearch:9200
+      spring.rabbitmq.host: rabbitmq
+      eureka.client.serviceUrl.defaultZone: http://service-registry:8761/eureka
+      eureka.host: service-registry
+      eureka.instance.preferIpAddress: 'true'
     depends_on:
       - postgresql
       - rabbitmq
       - elasticsearch
-    ports:
-      - 8083:8083
-    restart: always
-    networks:
-      - spring-cloud-network
-
-networks:
-    spring-cloud-network:
-        driver: bridge
+      - service-registry
