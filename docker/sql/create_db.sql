@@ -1,0 +1,2 @@
+CREATE DATABASE db_wallet;
+CREATE DATABASE db_movement;
