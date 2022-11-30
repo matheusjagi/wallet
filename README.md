@@ -1,4 +1,4 @@
-# PICPAY WALLET - Projeto desenvolvido para desafio de processo seletivo
+# WALLET - Sua carteira virtual
 
 Sistema projetado para criação de uma carteira digital para realização de operações financeiras básicas como: transferência de valores entre usuários, saques, depósitos e pagamento de contas. A solução foi construida no modelo de uma API Rest se utilizando de microsserviços, usando as tecnologias mais usadas do Spring, contendo comunicações sincronas e assincronas se utilizando de filas de processamento.
 
