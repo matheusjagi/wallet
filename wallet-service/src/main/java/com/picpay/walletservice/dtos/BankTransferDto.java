@@ -2,7 +2,10 @@ package com.picpay.walletservice.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
@@ -11,14 +14,17 @@ import java.io.Serializable;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BankTransferDto implements Serializable {
 
     @NotBlank
     private String userCpf;
 
-    @NotNull
-    private Integer accountPassword;
+    @NotBlank
+    private String accountPassword;
 
     @NotNull
     private Double operationAmount;

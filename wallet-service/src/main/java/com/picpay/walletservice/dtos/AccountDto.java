@@ -4,18 +4,23 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.picpay.walletservice.enums.AccountStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountDto implements Serializable {
 
@@ -38,9 +43,9 @@ public class AccountDto implements Serializable {
     @JsonView(AccountView.List.class)
     private String bankNumber;
 
-    @NotNull(groups = AccountView.Registration.class)
+    @NotBlank(groups = AccountView.Registration.class)
     @JsonView(AccountView.Registration.class)
-    private Integer password;
+    private String password;
 
     @NotNull(groups = AccountView.BalanceUpdate.class)
     @JsonView({AccountView.List.class, AccountView.BalanceUpdate.class})

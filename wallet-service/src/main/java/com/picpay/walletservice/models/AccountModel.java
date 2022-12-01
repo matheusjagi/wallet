@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.picpay.walletservice.enums.AccountStatus;
 import com.picpay.walletservice.enums.AccountType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -49,7 +51,7 @@ public class AccountModel implements Serializable {
 
     @Column(nullable = false, length = 4)
     @JsonIgnore
-    private Integer password;
+    private String password;
 
     @Column(nullable = false, precision=12, scale=2)
     private Double amount;

@@ -138,11 +138,4 @@ public class AccountServiceImpl implements AccountService {
 
         log.info("Update amount successfully - Account ID: {}", accountId);
     }
-
-    @Override
-    public void checkPassword(UUID accountId, Integer accountPassword) {
-        if (!accountRepository.validatePassword(accountId, accountPassword)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Password incorrect.");
-        }
-    }
 }

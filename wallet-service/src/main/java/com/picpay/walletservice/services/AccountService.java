@@ -22,7 +22,5 @@ public interface AccountService {
 
     void updateAccountAmount(String movementType, UUID accountId, Double amount);
 
-    void checkPassword(UUID accountId, Integer accountPassword);
-
     AccountDto findByAccountInformation(String accountNumber, String accountAgency, String bankNumber);
 }
