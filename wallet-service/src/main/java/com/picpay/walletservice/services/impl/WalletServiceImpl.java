@@ -44,7 +44,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void withdraw(FinancialOperationDto financialOperationDto) {
         AccountDto accountDto = accountService.findByUserCpf(financialOperationDto.getUserCpf());
-        accountService.checkPassword(accountDto.getId(), financialOperationDto.getAccountPassword());
+        checkPassword(financialOperationDto.getAccountPassword(), accountDto.getPassword());
 
         Double currentAmount = accountDto.getAmount() - financialOperationDto.getOperationAmount();
         checkEnoughBalance(currentAmount);
@@ -58,6 +58,12 @@ public class WalletServiceImpl implements WalletService {
                 financialOperationDto.getOperationAmount());
 
         timelineEventPublisher.publisher(createTimelineEventDto(accountDto.getUserId(), movementDto));
+    }
+
+    private static void checkPassword(String sourcePassword, String targetPassword) {
+        if (!sourcePassword.equals(targetPassword)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Password incorrect.");
+        }
     }
 
     private void checkEnoughBalance(Double currentAmount) {
@@ -86,7 +92,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void paymentInvoice(PaymentDto paymentDto) {
         AccountDto accountDto = accountService.findByUserCpf(paymentDto.getUserCpf());
-        accountService.checkPassword(accountDto.getId(), paymentDto.getAccountPassword());
+        checkPassword(paymentDto.getAccountPassword(), accountDto.getPassword());
 
         Double currentAmount = accountDto.getAmount() - paymentDto.getOperationAmount();
         checkEnoughBalance(currentAmount);
@@ -102,7 +108,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void bankTransfer(BankTransferDto bankTransferDto) {
         AccountDto accountSourceDto = accountService.findByUserCpf(bankTransferDto.getUserCpf());
-        accountService.checkPassword(accountSourceDto.getId(), bankTransferDto.getAccountPassword());
+        checkPassword(bankTransferDto.getAccountPassword(), accountSourceDto.getPassword());
 
         Double currentAmount = accountSourceDto.getAmount() - bankTransferDto.getOperationAmount();
         checkEnoughBalance(currentAmount);
